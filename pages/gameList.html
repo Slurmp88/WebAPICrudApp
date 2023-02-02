@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameList</title>
+</head>
+<body>
+    <div id = "Container">
+    <h1>Game List</h1>
+    <nav>
+        <a href = "index.html">Add Games</a>
+    </nav>
+    <p>List Games Here</p>
+    <script>
+        fetch('/getGames').then(function(games){
+            games.json().then(function(theGames){
+                console.log(theGames);
+                //Append Our Container Html 
+                for(let game of theGames.game)
+                {
+                    var gameElement = document.createElement('p');
+                    gameElement.innerHTML = game.game;
+                    document.getElementById("Container").appendChild(gameElement);
+                    
+                    //delete button
+                    var deleteButton = document.createElement('button');
+                    deleteButton.innerText = "Delete Game";
+                    deleteButton.addEventListener("click", function(){
+                        //fetch request to server for deletion;
+                        location.reload();
+                        fetch("/deleteGame", 
+                        {
+                            method:"POST",
+                            headers:{"Content-Type" : "application/json"},
+                            body:JSON.stringify({
+                                game:game
+                            })
+                        })
+                    })
+
+                    gameElement.appendChild(deleteButton);
+
+                }
+            })
+        })
+    </script>
+    </div>
+</body>
+</html>
