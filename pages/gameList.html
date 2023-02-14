@@ -40,8 +40,15 @@
                         })
                     })
 
+                    //Update button
+                    var updateButton = document.createElement('button');
+                    updateButton.innerText = "Update Name";
+                    updateButton.addEventListener("click", function(){
+                        window.location.replace("/updatePage.html?id=" + game._id + "&name=" + game.game);
+                        //window.location.replace("/getID:" + game._id);
+                    })
                     gameElement.appendChild(deleteButton);
-
+                    gameElement.appendChild(updateButton);
                 }
             })
         })
