@@ -41,7 +41,6 @@ app.post("/saveGame", function(req, res)
     });
 })
 
-
 app.get("/getGames", function(req,res){
     Game.find({}).sort({game: 1}).then(function(game){
         //console.log({game});
