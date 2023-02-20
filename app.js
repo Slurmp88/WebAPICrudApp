@@ -5,7 +5,6 @@ var bodyparser = require("body-parser");
 var mongoose = require("mongoose");
 var port = process.env.port || 3000;
 var db = require("./config/database");
-
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(express.json());
@@ -43,11 +42,26 @@ app.post("/saveGame", function(req, res)
 })
 
 app.get("/getGames", function(req,res){
-    Game.find({}).then(function(game){
+    Game.find({}).sort({game: 1}).then(function(game){
         //console.log({game});
         res.json({game});
     });
 })
+
+var Query = "";
+app.post("/searchGame", function(req,res){
+    //console.log(req.body.Query);
+    Query = req.body.Query;
+    res.redirect("searchPage.html")
+})
+
+app.get("/searchGames", function(req,res){
+    Game.find({game:Query}).then(function(game){
+        //console.log({game});
+        res.json({game});
+    });
+})
+
 
 app.post("/deleteGame", function(req,res){
     console.log(`Game Deleted ${req.body.game._id}`);

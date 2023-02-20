@@ -4,20 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameList</title>
+    <title>Search</title>
 </head>
 <body>
     <div id = "Container">
+
     <h1>Game List</h1>
     <nav>
         <a href = "index.html">Add Games</a>
-        <a href = "searchPage.html">Search</a>
     </nav>
     <p>List Games Here</p>
+    
+    <form action = "/searchGame" method="post">
+        <label for="name" id = "name">Search</label>
+        <br>
+        <input type="text" name = "Query" id = "query">
+        <br>
+        <input type = "submit" value="Search Games">
+    </form>
+
     <script>
-
-
-        fetch('/getGames').then(function(games){
+        fetch('/searchGames').then(function(games){
             games.json().then(function(theGames){
                 console.log(theGames);
                 //Append Our Container Html 
