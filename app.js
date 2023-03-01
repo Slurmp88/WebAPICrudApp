@@ -23,8 +23,11 @@ mongoose.connect(db.mongoURI,{
 require("./models/Game");
 var Game = mongoose.model("game");
 
-//example routes
+require("./models/Unity");
+var Unity = mongoose.model("unity");
 
+//example routes
+//#region JavaScript
 app.get("/", function(req, res){
     res.redirect("gameList.html");
 })
@@ -82,6 +85,55 @@ app.get("/getID::id", function(req, res){
     //console.log(`Id Requested ${req.body.game._id}`);
     //res.redirect(`updatePage.html?id=${req.params.id} + "&name=` + req.params.body.game);
 })
+//#endregion
+
+//#region UNITY
+app.post("/addUnityEntry", function(req, res)
+{
+    console.log(req.body);
+                            //Promise statement
+    new Unity(req.body).save().then(
+        function()
+        {
+            console.log("Success")
+    });
+})
+
+app.post("/deleteUnityEntry", function(req,res){
+    console.log(`Game Deleted ${req.body._id}`);
+    Unity.findByIdAndDelete(req.body._id).exec();
+    res.redirect('gameList.html');
+})
+
+app.get("/unityFetchEntries", function(req,res){
+    Unity.find({}).sort({ScreenName: 1}).then(function(entry){
+        console.log({entry});
+        res.json({entry});
+    });
+})
+
+app.post("/unityUpdateEntry", function(req, res){
+    console.log(req.body);
+    Unity.findByIdAndUpdate(req.body._id, {ScreenName:req.body.ScreenName, FirstName:req.body.FirstName, 
+        LastName:req.body.LastName, Date:req.body.Date, Score:req.body.Score}, function(){
+    });
+})
+
+var Query2 = "";
+app.post("/unitySearchSet", function(req,res){
+    console.log(req.body.Query);
+    Query2 = req.body.Query;
+    res.redirect("searchPage.html")
+})
+
+app.get("/unitySearchEntry", function(req,res){
+    Unity.find({ScreenName:Query2}).then(function(entry){
+        console.log({entry});
+        res.json({entry});
+    });
+})
+
+//#endregion
 
 
 
@@ -91,4 +143,6 @@ app.listen(port,
         console.log(`Running on port ${port}`)
     }
 )
+
+
 
