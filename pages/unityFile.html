@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameList</title>
+    <link rel = "stylesheet" type="text/css" href="style/style.css"/>
+</head>
+<body id = "body">
+    <div id = "Container">
+    <h1>Not Dead Yet High Scores</h1>
+    <script>
+        fetch('/unityFetchPlayers').then(function(entries){
+            entries.json().then(function(allEntries){
+                console.log(allEntries);
+                //Append Our Container Html 
+                for(let entry of allEntries.entry)
+                {
+                    var gameElement = document.createElement('p');
+                    gameElement.innerHTML = entry.ScreenName + " " + entry.HighScore;
+                    document.getElementById("Container").appendChild(gameElement);
+                    
+                    //delete button
+                    var deleteButton = document.createElement('button');
+                    deleteButton.innerText = "Delete Score";
+                    deleteButton.className = "deletebutton";
+                    deleteButton.addEventListener("click", function(){
+                        //fetch request to server for deletion;
+                        location.reload();
+                        fetch("/deleteScore", 
+                        {
+                            method:"POST",
+                            headers:{"Content-Type" : "application/json"},
+                            body:JSON.stringify({
+                                entry:entry
+                            })
+                        })
+                    })
+
+                    //Update button
+                    var updateButton = document.createElement('button');
+                    updateButton.innerText = "Update Name";
+                    updateButton.className = "updatebutton";
+                    updateButton.addEventListener("click", function(){
+                        window.location.replace("/unityUpdate.html?id=" + entry._id + "&name=" + entry.ScreenName);
+                        //window.location.replace("/getID:" + game._id);
+                    })
+                    gameElement.appendChild(deleteButton);
+                    gameElement.appendChild(updateButton);
+                }
+            })
+        })
+    </script>
+    </div>
+</body>
+</html>

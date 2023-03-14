@@ -26,11 +26,14 @@ var Game = mongoose.model("game");
 require("./models/Unity");
 var Unity = mongoose.model("unity");
 
+require("./models/Unity2");
+var Unity2 = mongoose.model("unity2");
+
+app.get("/", function(req, res){
+    res.redirect("unityFile.html");
+})
 //example routes
 //#region JavaScript
-app.get("/", function(req, res){
-    res.redirect("gameList.html");
-})
 
 app.post("/saveGame", function(req, res)
 {
@@ -132,10 +135,39 @@ app.get("/unitySearchEntry", function(req,res){
         res.json({entry});
     });
 })
-
 //#endregion
 
+//Final
+app.get("/unityFetchPlayers", function(req,res){
+    Unity2.find({}).sort({HighScore: -1}).then(function(entry){
+        console.log({entry});
+        res.json({entry});
+    });
+})
 
+app.post("/addUnityPlayer", function(req, res)
+{
+    console.log(req.body);
+                            //Promise statement
+    new Unity2(req.body).save().then(
+        function()
+        {
+            console.log("Success")
+    });
+})
+
+app.post("/updateUnityName", function(req, res){
+    console.log(req.body);
+    Unity2.findByIdAndUpdate(req.body.id, {ScreenName:req.body.ScreenName}, function(){
+        res.redirect('unityFile.html');
+    });
+})
+
+app.post("/deleteScore", function(req,res){
+    console.log(`Game Deleted ${req.body.entry._id}`);
+    Unity2.findByIdAndDelete(req.body.entry._id).exec();
+    res.redirect('unityFile.html');
+})
 
 app.use(express.static(__dirname+"/pages"));
 app.listen(port, 

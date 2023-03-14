@@ -1,0 +1,15 @@
+.updatebutton{
+    margin-left: 20px;
+}
+
+.deletebutton{
+    margin-left: 20px;
+}
+
+#body{
+    text-align: center;
+    background-image: url("bg.png");
+    background-repeat: no-repeat; 
+    background-size: cover;
+    color: white;
+}
